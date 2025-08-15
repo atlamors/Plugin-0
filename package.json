@@ -1,0 +1,22 @@
+{
+  "name": "@atla/medusa-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@9.1.0",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "predev": "bash -lc 'fuser -k 3011/tcp || true; fuser -k 9011/tcp || true'",
+    "dev": "pnpm predev && turbo run dev --parallel --filter=apps/medusa --filter=medusa-next --filter=@atla/medusa-plugin-0",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "docs:generate": "node plugins/plugin-0/scripts/docs-generate.mjs",
+    "docs:check": "node plugins/plugin-0/scripts/docs-generate.mjs && git diff --exit-code -- plugins/plugin-0/README.mdx || (echo 'Docs out of date. Run pnpm docs:generate' && exit 1)"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "@changesets/cli": "^2.27.8"
+  }
+}
+

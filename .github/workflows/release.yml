@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+      - name: Enable Corepack
+        run: corepack enable && corepack prepare pnpm@9.1.0 --activate
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Create Versions
+        run: pnpm dlx changeset version
+      - name: Build
+        run: pnpm -w build
+      - name: Commit and tag versions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: version packages"
+          git push
+  publish:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+      - name: Enable Corepack
+        run: corepack enable && corepack prepare pnpm@9.1.0 --activate
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm -w build
+      - name: Publish
+        run: pnpm dlx changeset publish --no-git-tag --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+

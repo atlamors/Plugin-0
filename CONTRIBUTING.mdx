@@ -1,0 +1,69 @@
+# Contributing to `@atla/medusa-plugin-0`
+
+We welcome contributions from the community! This guide covers the dev setup, workflow, and conventions.
+
+## Dev Environment Setup (PNPM)
+```bash
+# Clone this monorepo
+git clone git@github.com:atlamors/medusa-plugin-0.git
+cd medusa-plugin-0
+
+# Ensure Corepack and PNPM
+corepack enable
+pnpm --version
+
+# Install workspace dependencies
+pnpm install
+
+# Start the Medusa dev host with the plugin loaded
+pnpm dev
+```
+## Monorepo Structure
+```
+/apps
+  /medusa
+/plugins
+  /plugin-0
+    /src
+    /tests
+    package.json
+    README.mdx
+    CONTRIBUTING.mdx
+```
+
+## Branching Strategy
+- `plugin_name/feat/*` – New features
+- `plugin_name/fix/*` – Bug fixes
+- `plugin_name/staging` – Staging integration branch
+- `staging/` – Global staging
+- `main` – Production release
+
+## Publishing
+Publishing will be automated via GitHub Actions when merging to `main`.
+CI configuration is in `.github/workflows/ci.yml`. Changesets is used for versioning.
+
+## Testing & Linting
+- Unit tests: `pnpm test`
+- Integration tests: Run inside Medusa `/integration-tests/`
+- Lint: `pnpm lint`
+
+## Commit Conventions
+Follow [Conventional Commits](https://www.conventionalcommits.org/).
+
+## Running Unit Tests
+```bash
+pnpm -w test
+```
+
+## Licensing in Dev
+Use a `.env` file:
+```
+PLUGIN_0_LICENSE_KEY=dev-key
+```
+
+## Compatibility
+- Medusa v2
+- Node.js 20 and 22 (minimum 20)
+
+## Package Manager
+- PNPM only. Ensure Corepack is enabled and PNPM is pinned via `packageManager` in `package.json`.
