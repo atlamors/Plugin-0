@@ -5,9 +5,8 @@ import { setOptions } from "./utils/state"
 export type Plugin0Options = Plugin0OptionsType
 
 export default async function plugin0(options?: Plugin0OptionsInput) {
-  const parsedOptions = Plugin0OptionsSchema.parse(options ?? {})
-  logger.debug({ ...parsedOptions }, "Plugin 0 initialized with options")
-  setOptions(parsedOptions)
-  return { options: parsedOptions }
+    const parsedOptions = Plugin0OptionsSchema.parse(options ?? {})
+    logger.debug({ ...parsedOptions }, "Plugin 0 initialized with options")
+    setOptions(parsedOptions)
+    return { options: parsedOptions }
 }
-

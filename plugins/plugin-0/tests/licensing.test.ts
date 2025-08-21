@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { verifyLicenseStub } from "../src/modules/licensing/stub"
+import { verifyLicenseStub } from "../../src/modules/licensing/stub"
 
 describe("verifyLicenseStub", () => {
   it("returns free tier when no key", async () => {

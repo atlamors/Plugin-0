@@ -1,6 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework"
-import { enqueueTelemetry, flushTelemetry } from "../../../../utils/observability/telemetry"
-import { getOptions } from "../../../../utils/state"
+import { enqueueTelemetry, flushTelemetry } from "../../../../../src/utils/observability/telemetry"
+import { getOptions } from "../../../../../src/utils/state"
 
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const opts = getOptions()

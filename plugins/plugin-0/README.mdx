@@ -3,7 +3,7 @@
 **Maintained by [Andrew Nelson](https://www.andrewnelson.net) (a.k.a. [Atla](https://github.com/atlamors))**  
 CTO at [Another Creative](https://www.anothercreative.ca/)
 
-> **Namespace:** [`@atla/medusa-plugin-0`](https://www.npmjs.com/package/@atla/medusa-plugin-0)  
+> **Namespace:** [`@atla/plugin-0`](https://www.npmjs.com/package/@atla/plugin-0)  
 > **Source:** [github.com/atlamors/medusa-plugin-0](https://github.com/atlamors/medusa-plugin-0)  
 > **Agency:** [anothercreative.ca](https://www.anothercreative.ca/)
 
@@ -43,14 +43,14 @@ flowchart LR
 
 ## Quick Start
 ```bash
-pnpm add @atla/medusa-plugin-0
+pnpm add @atla/plugin-0
 ```
 
 ### Register in `medusa.config.ts`
 ```ts
 export const plugins = [
   {
-    resolve: "@atla/medusa-plugin-0",
+    resolve: "@atla/plugin-0",
     options: {
       licenseKey: process.env.PLUGIN_0_LICENSE_KEY,
       proFeatures: true,
@@ -149,7 +149,7 @@ See [ROADMAP.mdx](./ROADMAP.mdx) for active build steps.
   - If you’ll import module resources from apps, expose subpaths:
     - `"./workflows": "./dist/workflows/index.js"`
     - `"./modules": "./dist/modules/index.js"`
-  - Then import in apps as `import { MyWorkflow } from "@atla/medusa-plugin-0/workflows"`.
+  - Then import in apps as `import { MyWorkflow } from "@atla/plugin-0/workflows"`.
 
 - DB entities & migrations
   - Replace temp file persistence with Medusa module entities + migrations and run `plugin:db:generate`.

@@ -1,6 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework"
-import { getLicense } from "../../../../utils/state"
-import { hasFeature } from "../../../../modules/licensing/gate"
+import { getLicense } from "utils/state"
+import { hasFeature } from "modules/licensing/gate"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const { status } = await getLicense()

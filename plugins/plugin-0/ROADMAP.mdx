@@ -1,0 +1,372 @@
+## **Plugin 0 — Complete Roadmap**
+
+**Project Overview**  
+Plugin 0 is a production-grade Medusa v2 plugin boilerplate for freemium OSS plugins.  
+It bundles:
+
+- Backend foundations (modules, routes, migrations, subscribers, workflows)
+    
+- Admin v2 UI (settings widget + optional banner)
+    
+- Monetization (license key gating with online/offline verify + grace)
+    
+- Observability (logs, traces, opt-in telemetry)
+    
+- Security (authz, signature verify, rate limits)
+    
+- DX (tests, CI/CD, canaries, Changesets)
+    
+
+The goal is a “drop-in” starting point to ship Shopify/WordPress-level freemium plugins—composable, testable, and upgrade-safe.
+
+---
+
+### **Phase 0 — Repo & Workspace Scaffolding**
+
+**Goals**: Monorepo ready; instant local dev loop.
+
+**Deliverables**
+
+- `pnpm` workspaces + `turbo` + `changesets`
+    
+ - `apps/medusa` (dev host)
+    
+ - `plugins/plugin-0` (empty package with build/test scripts)
+    
+
+**Tasks**
+
+- Init monorepo: `pnpm init -y`, add `turbo @changesets/cli tsup vitest`
+    
+- `pnpm-workspace.yaml` with `apps/*`, `plugins/*`
+    
+- Turbo pipeline (build, test, lint)
+    
+- Create backend via Medusa starter; minimal `medusa.config.ts`
+    
+- Add `@atla/plugin-0` as workspace dependency
+    
+- Scripts for root and plugin (dev, build, test, lint, typecheck)
+    
+
+**Acceptance**
+
+- `pnpm dev` boots backend with hot-reloading plugin code
+    
+- `pnpm -w build && pnpm -w test` passes (unit tests scaffolded under `plugins/plugin-0/tests`)
+    
+- Root and packages declare `engines` (Node >=20) and `packageManager` (pnpm)
+    
+- `corepack enable` documented in setup (see CONTRIBUTING)
+    
+
+---
+
+### **Phase 1 — Plugin Skeleton & Registration**
+
+**Goals**: Plugin discoverable; routes mount; DI works.
+
+**Deliverables**
+
+- `src/index.ts` registers options + services
+    
+- Folder scaffolding: `api/admin`, `api/store`, `admin/widgets`, `modules`, `subscribers`, `workflows`, `migrations`, `middlewares`, `observability`, `utils`
+    
+- Minimal admin route: `GET /admin/plugin-0/health` → `{ ok: true, version }`
+    
+
+**Tasks**
+
+- Zod options schema (`src/config.ts`)
+    
+- Container registrations (settings, license, telemetry placeholders)
+    
+- Route register helper
+    
+- Basic logger wrapper
+    
+
+**Acceptance**
+
+- Authenticated hit to `/admin/plugin-0/health` returns `{ ok: true }`
+    
+
+---
+
+### **Phase 1.5 — Sample Storefront API Route**
+
+**Goals**: Immediate storefront integration proof.
+
+**Deliverables**
+
+- `GET /store/plugin-0/health` — JSON payload with plugin metadata, version, timestamp
+    
+- CORS enabled
+    
+- Logs each hit
+    
+- Integration test + README fetch snippet
+    
+
+**Acceptance**
+
+- Route reachable in dev & prod without auth
+    
+- Deterministic payload for testing
+    
+
+---
+
+### **Phase 2 — Settings Storage & Admin UI**
+
+**Goals**: Server-side settings + admin UI.
+
+**Deliverables**
+
+- Settings entity + service stub
+    
+- GET/PUT `/admin/plugin-0/settings` (Zod validated)
+    
+- Admin widget with tabs: **General | License | Help**
+    
+    - Help tab: troubleshooting, links, diagnostics (health snapshot)
+        
+
+**Tasks**
+
+- Migration for `plugin0_settings`
+    
+- SettingsService (get, upsert, validate)
+    
+- Admin widget load/save/reset
+    
+- “Reset to defaults” action
+    
+
+**Acceptance**
+
+- UI changes persist & reload correctly
+    
+- Invalid payload → `400` with message
+    
+
+---
+
+### **Phase 3 — Licensing (Freemium → Pro)**
+
+**Goals**: License verification (online/offline), feature gates, UX.
+
+**Deliverables**
+
+- License entity
+    
+- LicenseService (remote verify, offline verify, grace period)
+    
+- Routes: POST/GET `/admin/plugin-0/license` (stubbed)
+    
+- Feature gate util `hasFeature()`
+    
+- Unified status object:
+
+`type LicenseStatus = {   tier: "free" | "pro" | "enterprise"   features: string[]   expiresAt?: string   lastVerifiedAt?: string   state: "valid" | "grace" | "expired" | "offline" | "invalid"   message?: string }`
+
+**Acceptance**
+
+- Grace period honored
+    
+- Expired beyond grace → 403 on pro endpoint
+    
+- Free features never blocked
+    
+
+---
+
+### **Phase 3.5 — Licensing UI/UX Enhancements**
+
+**Goals**: Friendly, clear license states.
+
+**Deliverables**
+
+- UI states with icons/colors, next-steps
+    
+- Inline actions: retry verify, paste key, contact support
+    
+- Optional dismissible banner widget for status
+    
+
+**UX Copy Examples**
+
+- **Valid**: “License verified • Pro features unlocked”
+    
+- **Grace**: “Couldn’t reach server. Pro features active — 3 days left in grace.”
+    
+- **Offline**: “Using cached verification from 2h ago.”
+    
+- **Expired**: “Expired on 2025-04-02. Free features remain.”
+    
+- **Invalid**: “Couldn’t verify this key. Check for typos.”
+    
+
+---
+
+### **Phase 4 — Observability & Telemetry (Opt-in)**
+
+**Goals**: Local traces/logs/metrics; optional product telemetry.
+
+**Deliverables**
+
+- Pino logger with redaction
+    
+    - Redact: `authorization`, `cookie`, `x-api-key`, `licenseKey`
+    
+- OTEL stubs
+    
+- TelemetryService (queue + background flush stub)
+    
+- POST `/admin/plugin-0/telemetry`
+    
+- Correlation IDs: `x-request-id`, `x-trace-id`
+    
+
+**Acceptance**
+
+- Telemetry off → no outbound calls
+    
+- Telemetry on → events sent without blocking UX
+    
+
+---
+
+### **Phase 5 — Webhooks & Hardening**
+
+**Goals**: Secure inbound/outbound calls.
+
+**Deliverables**
+
+- Inbound route example `/admin/plugin-0/webhooks/provider` (HMAC verify)
+    
+- Signature verification (HMAC/JWS), idempotency key header, replay guard
+    
+- Outbound client with retry + circuit breaker
+    
+- Error contract `{ code, message, retryAfter? }`
+    
+
+**Acceptance**
+
+- Invalid signature → 401
+    
+- Replay → 409
+    
+- Outbound failures → DLQ visible
+    
+
+---
+
+### **Phase 6 — Subscribers & Workflow Hooks**
+
+**Goals**: Demonstrate extensibility.
+
+**Deliverables**
+
+- Sample subscriber (`order.placed`) stub
+    
+- Sample workflow hook (product/variant lifecycle) stub
+    
+
+**Acceptance**
+
+- Triggered event logs or persists record
+    
+- Workflow hook runs when enabled
+    
+
+---
+
+### **Phase 7 — Testing (Unit, Integration, E2E)**
+
+**Goals**: Repeatable CI-ready tests.
+
+**Deliverables**
+
+- Vitest unit tests
+    
+- Integration harness with Medusa + plugin loaded
+    
+- Supertest for key routes
+    
+- HTTP mocking with `nock` or MSW
+    
+- Snapshot tests for README generator
+    
+- UX tests for license states
+    
+
+---
+
+### **Phase 8 — CI/CD & Release Workflow**
+
+**Goals**: Safe versioning, canaries, provenance.
+
+**Deliverables**
+
+- PR CI: lint/typecheck/build/test changed packages
+    
+- Canary publish on staging branches (`--tag next`)
+    
+- Release via Changesets bot
+    
+- Docs-check job: fail on README mismatch
+    
+- Publish types + README badges
+    
+- CI matrix runs on Node 20 and 22
+    
+- Release uses `npm publish --provenance` (public access)
+    
+
+---
+
+### **Phase 9 — Developer Experience & Docs**
+
+**Goals**: First-run success; clear contracts.
+
+**Deliverables**
+
+- README with install steps
+    
+- Init CLI (`npx @atla/create-medusa-plugin`)
+    
+- EXTENDING.md, SECURITY.md
+    
+- Compatibility matrix (Medusa/Node)
+    
+
+---
+
+### **Phase 9.5 — Docs Generator**
+
+**Goals**: Keep docs in sync with code.
+
+**Deliverables**
+
+- `pnpm docs:generate` script parses Zod schema + routes
+    
+- Auto-inserts into README between markers
+    
+- CI fails on mismatch
+    
+
+---
+
+### **Backlog / Nice-to-haves**
+
+- Remote config fetch for kill switches
+    
+- Multi-tenant settings
+    
+- i18n dictionaries
+    
+- Banner widget respecting feature gates
+    
+- Storefront API routes beyond health check

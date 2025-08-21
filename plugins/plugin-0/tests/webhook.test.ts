@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import crypto from "node:crypto"
-import { POST as webhook } from "../src/api/admin/plugin-0/webhooks/provider/route"
+import { POST as webhook } from "../../src/api/admin/plugin-0/webhooks/provider/route"
 
 function sign(body: any, secret: string) {
   const payload = JSON.stringify(body)

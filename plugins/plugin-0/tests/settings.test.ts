@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { GET, PUT } from "../src/api/admin/plugin-0/settings/route"
+import { GET, PUT } from "../../src/api/admin/plugin-0/settings/route"
 
 function makeRes() {
   let status = 200

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { GET as adminHealth } from "../src/api/admin/plugin-0/health/route"
-import { GET as storeHealth } from "../src/api/store/plugin-0/health/route"
+import { GET as adminHealth } from "../../src/api/admin/plugin-0/health/route"
+import { GET as storeHealth } from "../../src/api/store/plugin-0/health/route"
 
 function makeRes() {
   const headers: Record<string, string> = {}
