@@ -1,22 +1,32 @@
 {
-  "name": "@atla/medusa-monorepo",
-  "private": true,
-  "version": "0.0.0",
-  "packageManager": "pnpm@9.1.0",
-  "engines": { "node": ">=20" },
-  "scripts": {
-    "predev": "bash -lc 'fuser -k 3011/tcp || true; fuser -k 9011/tcp || true'",
-    "dev": "pnpm predev && turbo run dev --parallel --filter=apps/medusa --filter=medusa-next --filter=@atla/medusa-plugin-0",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint",
-    "docs:generate": "node plugins/plugin-0/scripts/docs-generate.mjs",
-    "docs:check": "node plugins/plugin-0/scripts/docs-generate.mjs && git diff --exit-code -- plugins/plugin-0/README.mdx || (echo 'Docs out of date. Run pnpm docs:generate' && exit 1)"
-  },
-  "devDependencies": {
-    "turbo": "^2.0.0",
-    "@changesets/cli": "^2.27.8"
-  }
+    "name": "@atla/medusa-monorepo",
+    "private": true,
+    "version": "0.0.0",
+    "packageManager": "pnpm@9.1.0",
+    "engines": {
+        "node": ">=20"
+    },
+    "bin": {
+        "plugin0": "cli/index.mjs"
+    },
+    "scripts": {
+        "predev": "bash -lc 'fuser -k 3011/tcp || true; fuser -k 9011/tcp || true'",
+        "dev": "pnpm predev && turbo run dev --parallel --filter=@atla/medusa-store-filters --filter=@atla/plugin-0 --filter=apps/medusa --filter=apps/medusa-storefront --filter=./plugins/medusa-product-variations --filter=./plugins/medusa-store-filters --filter=./plugins/plugin-0",
+        "dev:plugins": "turbo run dev --parallel --filter=@atla/medusa-store-filters --filter=@atla/plugin-0 --filter=./plugins/medusa-product-variations --filter=./plugins/medusa-store-filters --filter=./plugins/plugin-0",
+        "dev:plugin:filters": "turbo run dev --filter=@atla/medusa-store-filters",
+        "dev:plugin:0": "turbo run dev --filter=@atla/plugin-0",
+        "dev:medusa": "turbo run dev --filter=apps/medusa",
+        "dev:storefront": "pnpm --filter apps/medusa-storefront run dev",
+        "build": "turbo run build",
+        "test": "turbo run test",
+        "typecheck": "turbo run typecheck",
+        "lint": "turbo run lint",
+        "docs:generate": "node plugins/medusa-store-filters/src/utils/scripts/docs-generate.mjs",
+        "docs:check": "node plugins/medusa-store-filters/src/utils/scripts/docs-generate.mjs && git diff --exit-code -- plugins/medusa-store-filters/README.mdx || (echo 'Docs out of date. Run pnpm docs:generate' && exit 1)"
+    },
+    "devDependencies": {
+        "turbo": "^2.0.0",
+        "@changesets/cli": "^2.27.8",
+        "commander": "^12.0.0"
+    }
 }
-

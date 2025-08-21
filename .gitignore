@@ -23,6 +23,7 @@ coverage/
 .astro/
 storybook-static/
 *.tsbuildinfo
+.medusa/
 
 # Turborepo
 .turbo/
