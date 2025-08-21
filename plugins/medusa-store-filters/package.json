@@ -1,0 +1,89 @@
+{
+    "name": "@atla/medusa-store-filters",
+    "version": "0.0.0",
+    "description": "Medusa v2 freemium plugin boilerplate",
+    "license": "MIT",
+    "type": "module",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": [
+        "dist",
+        "README.mdx",
+        "ROADMAP.mdx",
+        "CONTRIBUTING.mdx"
+    ],
+    "sideEffects": false,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/atlamors/medusa-store-filters"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "packageManager": "pnpm@9.1.0",
+    "keywords": [
+        "medusa",
+        "medusajs",
+        "plugin",
+        "ecommerce",
+        "medusa-v2",
+        "freemium"
+    ],
+    "peerDependencies": {
+        "@medusajs/framework": "^2.9.0",
+        "@medusajs/medusa": "^2.9.0"
+    },
+    "devDependencies": {
+        "@medusajs/admin-sdk": "2.9.0",
+        "@medusajs/cli": "2.9.0",
+        "@medusajs/framework": "2.9.0",
+        "@medusajs/medusa": "2.9.0",
+        "@swc/core": "^1.5.7",
+        "@types/node": "^20.11.0",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "@typescript-eslint/eslint-plugin": "^7.12.0",
+        "@typescript-eslint/parser": "^7.12.0",
+        "eslint": "^9.7.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.29.1",
+        "pino": "^9.0.0",
+        "pino-pretty": "^11.0.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "tsup": "^8.0.0",
+        "typescript": "^5.4.0",
+        "vitest": "^2.0.0",
+        "zod": "^3.22.0"
+    },
+    "scripts": {
+        "build": "medusa plugin:build",
+        "ready": "bash -lc 'until [ -d .medusa/server ]; do sleep 0.2; done; echo READY'",
+        "dev": "medusa plugin:develop",
+        "dev:plugin": "medusa plugin:develop",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "lint": "eslint --ext .ts src",
+        "plugin:develop": "medusa plugin:develop",
+        "plugin:build": "medusa plugin:build",
+        "plugin:db:generate": "medusa plugin:db:generate"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "dependencies": {
+        "@medusajs/icons": "^2.9.0",
+        "@medusajs/js-sdk": "^2.9.0",
+        "@medusajs/types": "^2.9.0",
+        "@medusajs/ui": "^4.0.19"
+    }
+}
